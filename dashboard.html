@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Dashboard — Beyond the Shoreline</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet" />
+    
+    <style>
+        :root {
+            --navy-deep: #001833;
+            --gold: #D4AF37;
+            --blue-light: #add8e6;
+            --glass-bg: rgba(0, 51, 102, 0.35);
+            --glass-border: rgba(173, 216, 230, 0.2);
+            --glass-blur: blur(18px);
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--navy-deep);
+            color: var(--white);
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* ─── DASHBOARD SPECIFIC CSS ────────────────────── */
+        #member-dashboard {
+            padding: 6rem 3rem;
+            background: radial-gradient(circle at top right, #001833, #000810);
+            min-height: 100vh;
+        }
+
+        .section-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            line-height: 1.15;
+            color: var(--white);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .section-title em { font-style: italic; color: var(--blue-light); }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .building-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 2.5rem;
+            transition: transform 0.4s ease;
+        }
+
+        .building-id {
+            font-size: 0.65rem;
+            color: var(--gold);
+            letter-spacing: 0.3em;
+            display: block;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .building-stats span {
+            font-size: 0.7rem;
+            color: var(--blue-light);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            display: block;
+            padding: 0.5rem 0;
+        }
+
+        .zone-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .status-indicator {
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <section id="member-dashboard">
+        <div class="section-label">District Portal</div>
+        <h2 class="section-title">Member <em>Dashboard</em></h2>
+
+        <div class="dashboard-grid">
+            <div class="building-card">
+                <div class="building-id">Current Tier</div>
+                <h3 id="user-tier" style="color: var(--gold); margin-bottom: 1.5rem; font-family: 'Cormorant Garamond', serif; font-size: 1.8rem;">Gold Membership</h3>
+                <div class="building-stats">
+                    <span>Status: <b style="color: #4ade80;">Active</b></span>
+                    <span>Expiry: March 2027</span>
+                    <span>ID: SBFD-8829-X</span>
+                </div>
+                <button onclick="window.location.href='index.html'" style="margin-top: 2rem; background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 0.6rem 1.2rem; cursor: pointer; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.1em; width: 100%;">Sign Out</button>
+            </div>
+
+            <div class="building-card">
+                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; margin-bottom: 1rem;">District Access Monitoring</h3>
+                <p style="font-size: 0.85rem; color: rgba(173, 216, 230, 0.7); margin-bottom: 2rem; line-height: 1.6;">
+                    Real-time tracking of permitted zones within the floating business district.
+                </p>
+                
+                <div class="zone-monitor">
+                    </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Secure District Connection Established.");
+            
+            const accessData = [
+                { zone: "Lot A - Multi-level Parking", status: "Authorized", color: "#4ade80" },
+                { zone: "Lot B - District Office Clusters", status: "Authorized", color: "#D4AF37" },
+                { zone: "Lot C - VVIP Luxury Complex", status: "Restricted", color: "rgba(173, 216, 230, 0.5)" }
+            ];
+
+            const monitorContainer = document.querySelector('.zone-monitor');
+            
+            // Build the list dynamically
+            monitorContainer.innerHTML = accessData.map(item => `
+                <div class="zone-item" style="${item.status === 'Restricted' ? 'opacity: 0.5;' : ''}">
+                    <span>${item.zone}</span>
+                    <span class="status-indicator" style="color: ${item.color}">${item.status}</span>
+                </div>
+            `).join('');
+        });
+    </script>
+</body>
+</html>

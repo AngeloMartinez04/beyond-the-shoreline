@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Beyond the Shoreline — Subic Bay Floating Business District</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --navy: #003366;
+    --navy-deep: #001833;
+    --navy-mid: #00254d;
+    --blue-light: #add8e6;
+    --blue-glow: #5bc8e8;
+    --gold: #D4AF37;
+    --gold-light: #f0d060;
+    --gold-dark: #a8891a;
+    --white: #ffffff;
+    --glass-bg: rgba(0, 51, 102, 0.35);
+    --glass-border: rgba(173, 216, 230, 0.2);
+    --glass-blur: blur(18px);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--navy-deep);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ─── SCROLL PROGRESS BAR ─────────────────────────── */
+  #scroll-bar {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+    z-index: 9999;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 12px var(--gold);
+  }
+
+  /* ─── NAVBAR ──────────────────────────────────────── */
+  nav {
+    position: fixed; top: 3px; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 3rem;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-bottom: 1px solid var(--glass-border);
+    transition: padding 0.3s;
+  }
+  nav.scrolled { padding: 0.6rem 3rem; }
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    text-decoration: none;
+    color: var(--white);
+  }
+
+  .logo img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+
+  .logo:hover img {
+    transform: scale(1.05);
+  }
+
+  .logo-text {
+    line-height: 1.2;
+    border-left: 1px solid rgba(173, 216, 230, 0.3);
+    padding-left: 0.85rem;
+  }
+
+  .logo-text span:first-child {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--blue-light);
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  .logo-text span:last-child {
+    display: block;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .nav-links {
+    display: flex; align-items: center; gap: 2.5rem; list-style: none;
+  }
+  .nav-links a {
+    color: var(--blue-light); text-decoration: none; font-size: 0.75rem;
+    letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+    color: var(--navy-deep); border: none; cursor: pointer;
+    font-family: 'Montserrat', sans-serif; font-weight: 700;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 0.65rem 1.6rem; border-radius: 2px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 20px rgba(212,175,55,0.3);
+  }
+  .btn-gold:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(212,175,55,0.55);
+  }
+
+  section { position: relative; }
+
+  /* ─── HERO ────────────────────────────────────────── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    background:
+      radial-gradient(ellipse at 50% 80%, rgba(0,100,180,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 20% 20%, rgba(212,175,55,0.08) 0%, transparent 40%),
+      linear-gradient(180deg, #001020 0%, #002244 50%, #001833 100%);
+    overflow: hidden;
+  }
+
+  .hero-waves {
+    position: absolute; bottom: 0; left: 0; width: 100%; overflow: hidden;
+    line-height: 0; pointer-events: none;
+  }
+  .hero-waves svg { display: block; }
+
+  .hero-particles { position: absolute; inset: 0; pointer-events: none; }
+  .particle {
+    position: absolute; border-radius: 50%;
+    background: var(--gold); opacity: 0;
+    animation: particle-float linear infinite;
+  }
+
+  @keyframes particle-float {
+    0% { transform: translateY(0) scale(0); opacity: 0; }
+    10% { opacity: 0.6; transform: translateY(-10px) scale(1); }
+    90% { opacity: 0.2; }
+    100% { transform: translateY(-120px) scale(0.5); opacity: 0; }
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 900px; padding: 0 2rem;
+    animation: fade-up 1.2s ease both;
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow {
+    font-size: 0.7rem; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--gold); font-weight: 600; margin-bottom: 1.5rem;
+    animation: fade-up 1.2s ease 0.2s both;
+  }
+
+  .hero-headline {
+    font-family: 'Cormorant Garamond', serif; font-weight: 300;
+    font-size: clamp(2.4rem, 6vw, 5rem); line-height: 1.1;
+    color: var(--white); margin-bottom: 1.5rem;
+    animation: fade-up 1.2s ease 0.35s both;
+  }
+  .hero-headline em { font-style: italic; color: var(--blue-light); }
+
+  .hero-subtitle {
+    font-size: clamp(0.9rem, 2vw, 1.1rem); font-weight: 300;
+    color: rgba(173,216,230,0.8); letter-spacing: 0.05em;
+    max-width: 650px; margin: 0 auto 2.5rem;
+    animation: fade-up 1.2s ease 0.5s both;
+    line-height: 1.7;
+  }
+
+  .hero-cta {
+    animation: fade-up 1.2s ease 0.65s both;
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid rgba(173,216,230,0.4);
+    color: var(--blue-light); cursor: pointer;
+    font-family: 'Montserrat', sans-serif; font-weight: 600;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 0.65rem 1.6rem; border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .btn-outline:hover { border-color: var(--blue-light); background: rgba(173,216,230,0.08); }
+
+  /* ─── ABOUT ───────────────────────────────────────── */
+  #about {
+    padding: 8rem 3rem 6rem;
+    background: linear-gradient(180deg, #001833 0%, #002244 50%, #001433 100%);
+  }
+
+  .section-label {
+    font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--gold); font-weight: 600; margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif; font-weight: 300;
+    font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.15;
+    color: var(--white); margin-bottom: 2rem;
+  }
+  .section-title em { font-style: italic; color: var(--blue-light); }
+
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; align-items: center; max-width: 1200px; margin: 0 auto;
+  }
+
+  .about-text p {
+    color: rgba(173,216,230,0.75); font-weight: 300; line-height: 1.85;
+    font-size: 0.95rem; margin-bottom: 1.2rem;
+  }
+
+  .about-visual {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    height: 420px;
+    background: var(--navy-deep);
+    border: 1px solid var(--glass-border);
+}
+
+.about-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.about-visual:hover .about-hero-img {
+    transform: scale(1.05);
+}
+
+/* ─── ENHANCED BUILDING SHOWCASE ─────────────────── */
+#district-showcase {
+    padding: 8rem 3rem; 
+    background: linear-gradient(180deg, #001020 0%, #001833 100%);
+}
+
+.building-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); 
+    gap: 4rem; 
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.building-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-radius: 8px; 
+    overflow: hidden;
+    transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.building-card:hover {
+    transform: translateY(-12px);
+    border-color: rgba(212, 175, 55, 0.4);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+}
+
+.building-image-wrap {
+    position: relative;
+    height: 450px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.building-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center; 
+    transition: transform 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.building-card:hover .building-img {
+    transform: scale(1.08);
+}
+
+.building-tag {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: rgba(0, 24, 51, 0.9);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 0.4rem 1rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 700;
+    z-index: 2;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.building-info {
+    padding: 2.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to bottom, rgba(173, 216, 230, 0.03), transparent);
+}
+
+.building-id {
+    font-size: 0.65rem;
+    color: var(--gold);
+    letter-spacing: 0.3em;
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    opacity: 0.8;
+}
+
+.building-info h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    color: var(--white);
+    margin-bottom: 1.2rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+}
+
+.building-stats {
+    display: flex;
+    gap: 1.5rem;
+    border-top: 1px solid rgba(173, 216, 230, 0.1);
+    padding-top: 1.5rem;
+    margin-top: auto;
+}
+
+.building-stats span {
+    font-size: 0.7rem;
+    color: var(--blue-glow);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.building-stats span::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+}
+
+@media (max-width: 900px) {
+    .building-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    .building-image-wrap {
+        height: 350px;
+    }
+}
+
+@media (max-width: 600px) {
+    #district-showcase {
+        padding: 5rem 1.5rem;
+    }
+    .building-image-wrap {
+        height: 280px;
+    }
+    .building-info h3 {
+        font-size: 1.6rem;
+    }
+}
+
+.image-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem 1.5rem 1rem;
+    background: linear-gradient(to top, rgba(0, 12, 26, 0.9), transparent);
+    text-align: center;
+    pointer-events: none;
+}
+
+.image-caption span {
+    display: block;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+    font-weight: 700;
+}
+
+.image-caption p {
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    color: var(--blue-light);
+    opacity: 0.6;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+  .tech-cards {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-top: 5rem; max-width: 1200px; margin-inline: auto;
+    margin-top: 4rem;
+  }
+
+  .tech-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 4px; padding: 2rem;
+    cursor: pointer; transition: transform 0.35s, box-shadow 0.35s, border-color 0.35s;
+    position: relative; overflow: hidden;
+  }
+  .tech-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(212,175,55,0.06), transparent);
+    opacity: 0; transition: opacity 0.35s;
+  }
+  .tech-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(0,80,160,0.4); border-color: rgba(212,175,55,0.35); }
+  .tech-card:hover::before { opacity: 1; }
+
+  .tech-icon {
+    width: 48px; height: 48px; margin-bottom: 1.25rem;
+    background: rgba(212,175,55,0.1); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(212,175,55,0.25);
+  }
+  .tech-icon svg { width: 24px; height: 24px; }
+
+  .tech-card h3 {
+    font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase;
+    font-weight: 700; color: var(--gold); margin-bottom: 0.6rem;
+  }
+  .tech-card p {
+    font-size: 0.85rem; color: rgba(173,216,230,0.7);
+    font-weight: 300; line-height: 1.7;
+  }
+
+  #memberships {
+    padding: 8rem 3rem;
+    background: linear-gradient(180deg, #001433 0%, #001020 100%);
+  }
+
+  .memberships-header { text-align: center; margin-bottom: 4rem; }
+
+  .membership-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; max-width: 1100px; margin: 0 auto;
+    align-items: start;
+  }
+
+  .mem-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 4px; padding: 2.5rem 2rem;
+    transition: transform 0.35s, box-shadow 0.35s;
+    position: relative; overflow: hidden;
+  }
+  .mem-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,60,120,0.4); }
+
+  .mem-card.vip {
+    border-color: rgba(212,175,55,0.5);
+    background: linear-gradient(160deg, rgba(212,175,55,0.08) 0%, rgba(0,51,102,0.4) 100%);
+    transform: scale(1.03);
+  }
+  .mem-card.vip:hover { transform: scale(1.03) translateY(-6px); }
+
+  .mem-card.vip::before {
+    content: '';
+    position: absolute; top: -50%; left: -60%;
+    width: 200%; height: 200%;
+    background: conic-gradient(from 0deg, transparent 0deg, rgba(212,175,55,0.06) 60deg, transparent 120deg);
+    animation: shimmer-rot 6s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes shimmer-rot {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .mem-tier {
+    font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 0.5rem;
+  }
+  .mem-tier.silver { color: #b0c0d0; }
+  .mem-tier.gold-t { color: var(--gold); }
+  .mem-tier.vip-t { color: var(--gold-light); }
+
+  .mem-price {
+    font-family: 'Cormorant Garamond', serif; font-weight: 300;
+    font-size: 1.8rem; color: var(--white); margin-bottom: 0.3rem;
+  }
+  .mem-price-range {
+    font-size: 0.7rem; color: rgba(173,216,230,0.5);
+    letter-spacing: 0.1em; margin-bottom: 1.5rem;
+  }
+
+  .mem-divider {
+    height: 1px; background: var(--glass-border); margin-bottom: 1.5rem;
+  }
+
+  .mem-features { list-style: none; margin-bottom: 2rem; }
+  .mem-features li {
+    font-size: 0.82rem; color: rgba(173,216,230,0.8);
+    padding: 0.45rem 0; font-weight: 300;
+    display: flex; align-items: flex-start; gap: 0.6rem; line-height: 1.5;
+  }
+  .mem-features li::before {
+    content: '◆'; color: var(--gold); font-size: 0.5rem;
+    margin-top: 0.25rem; flex-shrink: 0;
+  }
+
+  .mem-badge {
+    display: inline-block; background: rgba(212,175,55,0.15);
+    border: 1px solid rgba(212,175,55,0.4);
+    color: var(--gold); font-size: 0.6rem; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 0.3rem 0.75rem;
+    border-radius: 2px; margin-bottom: 1.5rem;
+  }
+
+  /* ─── MODAL ───────────────────────────────────────── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 9000;
+    background: rgba(0,8,20,0.85);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s;
+  }
+  .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: linear-gradient(160deg, rgba(0,36,72,0.97), rgba(0,20,45,0.99));
+    border: 1px solid rgba(173,216,230,0.2);
+    border-radius: 6px; padding: 3rem;
+    max-width: 560px; width: 90%;
+    position: relative;
+    transform: translateY(30px); opacity: 0;
+    transition: transform 0.4s, opacity 0.4s;
+  }
+  .modal-overlay.active .modal { transform: translateY(0); opacity: 1; }
+
+  .modal-close {
+    position: absolute; top: 1.25rem; right: 1.25rem;
+    background: none; border: none; cursor: pointer;
+    color: rgba(173,216,230,0.5); font-size: 1.4rem; line-height: 1;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--gold); }
+
+  .modal-steps {
+    display: flex; gap: 0; margin-bottom: 2.5rem; position: relative;
+  }
+  .modal-steps::before {
+    content: ''; position: absolute;
+    top: 14px; left: 14px; right: 14px; height: 1px;
+    background: rgba(173,216,230,0.15);
+  }
+
+  .step-dot {
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    flex: 1; position: relative; z-index: 1;
+  }
+  .step-dot-circle {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid rgba(173,216,230,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem; font-weight: 700; color: rgba(173,216,230,0.4);
+    background: var(--navy-deep);
+    transition: all 0.4s;
+  }
+  .step-dot.active .step-dot-circle,
+  .step-dot.done .step-dot-circle {
+    border-color: var(--gold);
+    color: var(--gold);
+    box-shadow: 0 0 14px rgba(212,175,55,0.4);
+  }
+  .step-dot-label {
+    font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(173,216,230,0.35); text-align: center;
+    transition: color 0.4s;
+  }
+  .step-dot.active .step-dot-label { color: var(--gold); }
+
+  .modal-step-content { display: none; }
+  .modal-step-content.active { display: block; animation: fade-up 0.4s ease both; }
+
+  .modal h3 {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300;
+    color: var(--white); margin-bottom: 0.4rem;
+  }
+  .modal p.sub { font-size: 0.8rem; color: rgba(173,216,230,0.6); margin-bottom: 2rem; }
+
+  .form-group { margin-bottom: 1.2rem; }
+  .form-group label {
+    display: block; font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(173,216,230,0.6);
+    margin-bottom: 0.4rem; font-weight: 600;
+  }
+  .form-group input, .form-group select {
+    width: 100%; padding: 0.75rem 1rem;
+    background: rgba(0,51,102,0.4);
+    border: 1px solid rgba(173,216,230,0.2);
+    border-radius: 2px; color: var(--white);
+    font-family: 'Montserrat', sans-serif; font-size: 0.85rem;
+    outline: none; transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(212,175,55,0.15);
+  }
+  .form-group select option { background: var(--navy-mid); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .modal-nav { display: flex; justify-content: space-between; margin-top: 2rem; gap: 1rem; }
+
+  .loading-wrap {
+    text-align: center; padding: 1rem 0;
+  }
+  .progress-ring { position: relative; width: 100px; height: 100px; margin: 0 auto 1.5rem; }
+  .progress-ring svg { transform: rotate(-90deg); }
+  .progress-ring circle.bg { fill: none; stroke: rgba(173,216,230,0.1); stroke-width: 6; }
+  .progress-ring circle.fg {
+    fill: none; stroke: var(--gold); stroke-width: 6;
+    stroke-dasharray: 283; stroke-dashoffset: 283;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.3s ease;
+  }
+  .progress-ring .pct {
+    position: absolute; inset: 0; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 700; color: var(--gold);
+  }
+  .loading-status {
+    font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(173,216,230,0.7); margin-top: 1rem;
+  }
+  .pulse-dots { display: flex; gap: 6px; justify-content: center; margin-top: 1rem; }
+  .pulse-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold); opacity: 0.3;
+    animation: pulse-seq 1.4s ease-in-out infinite;
+  }
+  .pulse-dot:nth-child(2) { animation-delay: 0.2s; }
+  .pulse-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse-seq {
+    0%,100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.4); }
+  }
+
+  #contacts {
+    padding: 8rem 3rem;
+    background: linear-gradient(180deg, #001020 0%, #000c1a 100%);
+  }
+
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; max-width: 1200px; margin: 0 auto;
+    align-items: start;
+  }
+
+  .contact-info h2 {
+    font-family: 'Cormorant Garamond', serif; font-weight: 300;
+    font-size: clamp(2rem, 3.5vw, 2.8rem); line-height: 1.2;
+    color: var(--white); margin-bottom: 1.5rem;
+  }
+  .contact-info p {
+    font-size: 0.85rem; color: rgba(173,216,230,0.65);
+    line-height: 1.8; margin-bottom: 2rem;
+  }
+
+  .contact-detail {
+    display: flex; align-items: center; gap: 0.8rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem; color: rgba(173,216,230,0.7); font-weight: 300;
+  }
+  .contact-detail svg { width: 16px; height: 16px; color: var(--gold); flex-shrink: 0; }
+
+  .contact-form {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 4px; padding: 2.5rem;
+  }
+  .contact-form h3 {
+    font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); font-weight: 600; margin-bottom: 1.5rem;
+  }
+  .contact-form textarea {
+    width: 100%; padding: 0.75rem 1rem;
+    background: rgba(0,51,102,0.4);
+    border: 1px solid rgba(173,216,230,0.2);
+    border-radius: 2px; color: var(--white);
+    font-family: 'Montserrat', sans-serif; font-size: 0.85rem;
+    outline: none; resize: vertical; min-height: 120px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .contact-form textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(212,175,55,0.15);
+  }
+
+  .team-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .team-title {
+    font-size: 2.5rem;
+    letter-spacing: 0.1em;
+    color: var(--white);
+    margin-bottom: 4rem;
+    font-weight: 300;
+    text-transform: uppercase;
+  }
+
+  .team-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .team-member {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .member-photo-wrap {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #333;
+    flex-shrink: 0;
+    border: 2px solid rgba(212, 175, 55, 0.2);
+  }
+
+  .member-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .member-details h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+  }
+
+  .member-details .role {
+    display: block;
+    font-size: 0.9rem;
+    color: rgba(173, 216, 230, 0.6);
+    margin-bottom: 0.5rem;
+  }
+
+  .member-details .phone {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .member-details .phone:hover {
+    color: var(--gold);
+  }
+
+  @media (max-width: 600px) {
+    .team-member {
+      flex-direction: column;
+      text-align: center;
+    }
+    .team-title {
+      text-align: center;
+      font-size: 1.8rem;
+    }
+  }
+
+  .nav-login {
+    position: relative;
+    color: var(--gold) !important;
+    transition: all 0.3s ease;
+  }
+
+  .nav-login:hover {
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+  }
+
+  #login-overlay .modal {
+    max-width: 450px;
+    border-top: 3px solid var(--gold);
+  }
+
+  .auth-form-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: rgba(173, 216, 230, 0.5);
+  }
+
+  .auth-form-footer a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  footer {
+    background: #000810;
+    border-top: 1px solid rgba(173,216,230,0.08);
+    padding: 2.5rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  footer p { font-size: 0.7rem; color: rgba(173,216,230,0.3); letter-spacing: 0.1em; }
+  footer .gold-line { color: var(--gold); }
+
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+    #about { padding: 6rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .tech-cards { grid-template-columns: 1fr; }
+    .membership-grid { grid-template-columns: 1fr; max-width: 420px; }
+    .mem-card.vip { transform: scale(1); }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    #memberships { padding: 6rem 1.5rem; }
+    #contacts { padding: 6rem 1.5rem; }
+    footer { flex-direction: column; text-align: center; padding: 2rem 1.5rem; }
+  }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hero-headline { font-size: 2rem; }
+    .form-row { grid-template-columns: 1fr; }
+    .modal { padding: 2rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="scroll-bar"></div>
+
+<nav id="navbar">
+  <a href="#hero" class="logo">
+    <img src="images/assets/logo/Logo.png" alt="Beyond the Shoreline Logo" class="nav-logo-img">
+    <div class="logo-text">
+      <span>Subic Bay Harbor</span>
+      <span>BEYOND THE SHORELINE</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#district-showcase">Architectural Landmarks</a></li>
+    <li><a href="#memberships">Memberships</a></li>
+    <li><a href="#contacts">Contact</a></li>
+    
+    <!-- Added Login Link -->
+    <li><a href="javascript:void(0)" class="nav-login" onclick="openLoginModal()">Member Login</a></li>
+  </ul>
+  <button class="btn-gold" onclick="openModal()">Secure Membership</button>
+</nav>
+
+<section id="hero">
+  <div class="hero-particles" id="particles"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Beyond The Shoreline</div>
+    <h1 class="hero-headline">
+      A Smart, <em>Climate-Resilient</em><br>Floating Business District
+    </h1>
+    <p class="hero-subtitle">
+      The future of commerce isn't just on land—it's Beyond the Shoreline. 
+      Where marine innovation meets enterprise, and the bay becomes your boardroom.
+    </p>
+    <div class="hero-cta">
+      <button class="btn-gold" onclick="openModal()">Secure Your Membership</button>
+      <button class="btn-outline" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Explore the Vision</button>
+    </div>
+  </div>
+  <div class="hero-waves">
+    <svg viewBox="0 0 1440 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,90 L0,90 Z" fill="rgba(0,20,50,0.8)"/>
+      <path d="M0,60 C360,20 720,80 1080,40 C1260,20 1380,50 1440,60 L1440,90 L0,90 Z" fill="#001433" opacity="0.9"/>
+    </svg>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <div class="section-label">The Vision</div>
+      <h2 class="section-title">From Land<br>Congestion to<br><em>Marine Innovation</em></h2>
+      <p>As coastal cities strain under the weight of rapid urbanization, Subic Bay Floating Business District offers a singular opportunity: to build commerce upon the very waters that once separated people from prosperity.</p>
+      <p>Beyond the Shoreline is not a concept—it is an engineered reality. A floating district designed with climate resilience as its foundation, smart systems as its nervous system, and the Philippine sea as its stage.</p>
+      <p>Anchored by biorock, powered by tide and wind, and connected by fiber-optic marine infrastructure, this district redefines where business happens.</p>
+    </div>
+    <div class="about-visual reveal">
+    <img src="images/assets/photos/structures/Aerial.png" alt="Subic Bay Floating District Aerial View" class="about-hero-img">
+    <div class="image-caption">
+        <span>Aerial View</span>
+        <p>FLOATING BUSINESS DISTRICT</p>
+    </div>
+</div>
+  </div>
+
+  <div class="tech-cards">
+    <div class="tech-card reveal">
+      <div class="tech-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round">
+          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/>
+          <path d="M12 8v8M8 12h8"/>
+          <circle cx="12" cy="12" r="3" fill="rgba(212,175,55,0.15)"/>
+        </svg>
+      </div>
+      <h3>Biorock Systems</h3>
+      <p>Electrolytic mineral accretion accelerates coral growth 3–5× faster than natural rates, reinforcing underwater foundations while restoring marine biodiversity beneath the district.</p>
+    </div>
+    <div class="tech-card reveal">
+      <div class="tech-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round">
+          <path d="M2 12 Q6 6 12 12 Q18 18 22 12"/>
+          <path d="M2 18 Q6 12 12 18 Q18 24 22 18"/>
+          <path d="M12 2v3M12 19v3"/>
+        </svg>
+      </div>
+      <h3>Wave Converters</h3>
+      <p>Oscillating water column arrays capture tidal kinetic energy, converting Subic Bay's consistent swells into clean, continuous baseload power for the entire floating district.</p>
+    </div>
+    <div class="tech-card reveal">
+      <div class="tech-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round">
+          <ellipse cx="12" cy="12" rx="4" ry="10"/>
+          <ellipse cx="12" cy="12" rx="10" ry="4"/>
+          <circle cx="12" cy="12" r="2" fill="rgba(212,175,55,0.2)"/>
+        </svg>
+      </div>
+      <h3>Spiral Axis Wind Turbines</h3>
+      <p>Vertical-axis helical turbines operate silently at low wind speeds, generating power without the acoustic disruption of traditional turbines—ideal for a commercial district environment.</p>
+    </div>
+  </div>
+</section>
+
+<section id="district-showcase">
+  <div class="memberships-header reveal">
+    <div class="section-label">Master Plan</div>
+    <h2 class="section-title">Architectural <em>Landmarks</em></h2>
+    <p style="color:rgba(173,216,230,0.6);font-size:0.9rem;max-width:550px;margin:0 auto;font-weight:300;line-height:1.7;">
+      Explore the modular infrastructure of the Subic Bay Floating Business District. Each structure is engineered for buoyancy, stability, and carbon-neutral operations.
+    </p>
+  </div>
+
+  <div class="building-grid">
+    <div class="building-card reveal">
+        <div class="building-image-wrap">
+            <div class="building-tag">Hub Alpha</div>
+            <img src="images/assets/photos/structures/maincommercial/mainBuilding.webp" alt="Main Commercial" class="building-img">
+        </div>
+        <div class="building-info">
+            <span class="building-id">SBFD-MCB</span>
+            <h3>Oceana Mall (Main Commercial Building)</h3>
+            <div class="building-stats">
+                <span>Tier 1 Security</span>
+                <span>Mixed-Use</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="building-card reveal">
+        <div class="building-image-wrap">
+            <div class="building-tag">Premium</div>
+            <img src="images/assets/photos/structures/hotel/HOTEL.webp" alt="Montara Hotel" class="building-img">
+        </div>
+        <div class="building-info">
+            <span class="building-id">SBFD-HTL</span>
+            <h3>Montara Hotel</h3>
+            <div class="building-stats">
+                <span>Hospitality</span>
+                <span>Sub-Surface Suites</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="building-card reveal">
+        <div class="building-image-wrap">
+            <div class="building-tag">Restricted Access</div>
+            <img src="images/assets/photos/structures/vip/vipBuilding.webp" alt="VIP Building" class="building-img">
+        </div>
+        <div class="building-info">
+            <span class="building-id">SBFD-VVIP</span>
+            <h3>Maison D' Azur (V.I.P Building)</h3>
+            <div class="building-stats">
+                <span>Biometric Entry</span>
+                <span>VVIP Only</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="building-card reveal">
+        <div class="building-image-wrap">
+            <div class="building-tag">Public Space</div>
+            <img src="images/assets/photos/structures/recre/theater.webp" alt="Recreational Park" class="building-img">
+        </div>
+        <div class="building-info">
+            <span class="building-id">SBFD-OS</span>
+            <h3>Recreational Park</h3>
+            <div class="building-stats">
+                <span>1,200 Capacity</span>
+                <span>Green Roof</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="building-card reveal">
+        <div class="building-image-wrap">
+            <div class="building-tag">Sustainable</div>
+            <img src="images/assets/photos/structures/aquaponics/AQUAPONICS.webp" alt="Aquaponics" class="building-img">
+        </div>
+        <div class="building-info">
+            <span class="building-id">SBFD-ECO</span>
+            <h3>Aquaponics and Aquaculture Facility</h3>
+            <div class="building-stats">
+                <span>Zero Waste</span>
+                <span>Bio-Filtering</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="building-card reveal">
+        <div class="building-image-wrap">
+            <div class="building-tag">Logistics</div>
+            <img src="images/assets/photos/structures/parking/BAYPARK.webp" alt="Bay Park" class="building-img">
+        </div>
+        <div class="building-info">
+            <span class="building-id">SBFD-PRK</span>
+            <h3>Bay Park Multi-Level parking</h3>
+            <div class="building-stats">
+                <span>740 Slots</span>
+                <span>EV Charging</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="building-card reveal">
+        <div class="building-image-wrap">
+            <div class="building-tag">Business</div>
+            <img src="images/assets/photos/structures/commercial/comOne.webp" alt="Commercial Buildings" class="building-img">
+        </div>
+        <div class="building-info">
+            <span class="building-id">SBFD-CB-B</span>
+            <h3>Commercial Building</h3>
+            <div class="building-stats">
+                <span>Flexible Office</span>
+                <span>Lot B Hub</span>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+<!-- MEMBERSHIPS -->
+<section id="memberships">
+  <div class="memberships-header reveal">
+    <div class="section-label">Access Tiers</div>
+    <h2 class="section-title">Membership Levels</h2>
+    <p style="color:rgba(173,216,230,0.6);font-size:0.9rem;max-width:550px;margin:0 auto;font-weight:300;line-height:1.7;">
+      From essential district access to ultra-exclusive luxury at Lot C, select the tier that matches your corporate or personal requirements.
+    </p>
+  </div>
+
+  <div class="membership-grid">
+    <!-- Silver -->
+    <div class="mem-card reveal">
+      <div class="mem-tier silver">Silver Membership</div>
+      <p style="font-size: 0.7rem; color: var(--blue-light); margin-bottom: 0.5rem; opacity: 0.8;">Basic Member Layer</p>
+      <div class="mem-price">₱25k – ₱35k</div>
+      <div class="mem-price-range">per annum</div>
+      <div class="mem-divider"></div>
+      <ul class="mem-features">
+        <li><strong>Full District Access:</strong> Unlimited entry to floating business zones</li>
+        <li><strong>Member Perks:</strong> Exclusive discounts in retail and dining</li>
+        <li><strong>Priority Booking:</strong> Early access to public amenities and events</li>
+        <li style="opacity: 0.5; text-decoration: line-through; font-size: 0.75rem;">Gold Lounge & Exclusive Business Areas</li>
+        <li style="opacity: 0.5; text-decoration: line-through; font-size: 0.75rem;">Lot C VIP Complex Access</li>
+      </ul>
+      <button class="btn-outline" style="width:100%" onclick="openModal('Silver')">Select Silver</button>
+    </div>
+
+    <!-- Gold -->
+    <div class="mem-card reveal">
+      <div class="mem-tier gold-t">Gold Membership</div>
+      <p style="font-size: 0.7rem; color: var(--gold); margin-bottom: 0.5rem; opacity: 0.8;">Premium District VIP Layer</p>
+      <div class="mem-price">₱80k – ₱120k</div>
+      <div class="mem-price-range">per annum</div>
+      <div class="mem-divider"></div>
+      <ul class="mem-features">
+        <li><strong>Elite Access:</strong> Full access to the entire floating business district</li>
+        <li><strong>Priority Zones:</strong> Premium retail, events, and business lounges</li>
+        <li><strong>Commercial Hubs:</strong> Access to networking and engagement zones</li>
+        <li style="color: var(--gold-light); border-top: 1px solid rgba(212,175,55,0.1); padding-top: 0.5rem; margin-top: 0.5rem; font-size: 0.75rem;">
+          <em>Notice: Lot C VIP Complex requires VIP Tier upgrade</em>
+        </li>
+      </ul>
+      <button class="btn-gold" style="width:100%" onclick="openModal('Gold')">Select Gold</button>
+    </div>
+
+    <!-- VIP -->
+    <div class="mem-card vip reveal">
+      <div class="mem-badge">Ultra-Exclusive</div>
+      <div class="mem-tier vip-t">VIP Membership</div>
+      <p style="font-size: 0.7rem; color: var(--gold-light); margin-bottom: 0.5rem; opacity: 0.9;">Lot C VVIP Complex Layer</p>
+      <div class="mem-price">₱250k – ₱400k</div>
+      <div class="mem-price-range">per annum</div>
+      <div class="mem-divider"></div>
+      <ul class="mem-features">
+        <li><strong>Lot C VVIP:</strong> Exclusive access to luxury hospitality & VIP Marina</li>
+        <li><strong>Concierge:</strong> Dedicated executive services & private event access</li>
+        <li><strong>Docking:</strong> Premium docking privileges for marine vessels</li>
+        <li style="color: #ff6b6b; font-size: 0.7rem; border-top: 1px solid rgba(255,107,107,0.1); padding-top: 0.5rem; margin-top: 0.5rem;">
+          <strong>SECURED ZONE RESTRICTION:</strong> No access to admin, utilities, or marine operations zones.
+        </li>
+      </ul>
+      <button class="btn-gold" style="width:100%;background:linear-gradient(135deg,#a8891a,#D4AF37,#f0d060)" onclick="openModal('VIP')">Secure VIP Access</button>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTS -->
+<section id="contacts">
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <div class="section-label">Harbor Office</div>
+      <h2>Reach Us<br>at the <em style="font-style:italic;color:var(--blue-light)">Shoreline</em></h2>
+      <p>Our membership advisors are stationed at the Administration Building, Floating Business District. Inquiries are responded to within 24 hours.</p>
+      <div class="contact-detail">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        Central Business District (CBD), Waterfront Road–Dewey Avenue corridor, Subic Bay, Zambales, Philippines.
+      </div>
+      <div class="contact-detail">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.02 2.18 2 2 0 012 .02h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>
+        +63 (47) 252-4600
+      </div>
+      <div class="contact-detail">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        membership@beyondtheshoreline.ph
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="contact-form reveal">
+      <h3>Send an Inquiry</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" placeholder="Juan"/>
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" placeholder="Dela Cruz"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="juan@company.ph"/>
+      </div>
+      <div class="form-group">
+        <label>Company / Organization</label>
+        <input type="text" placeholder="Company Name"/>
+      </div>
+      <div class="form-group">
+        <label>Membership Interest</label>
+        <select>
+          <option value="">Select a tier…</option>
+          <option>Silver (₱25k–₱35k/yr)</option>
+          <option>Gold (₱80k–₱120k/yr)</option>
+          <option>VIP (₱250k–₱400k/yr)</option>
+          <option>General Inquiry</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea placeholder="Tell us about your business goals and how we can serve you at Beyond the Shoreline…"></textarea>
+      </div>
+      <button class="btn-gold" style="width:100%">Submit Inquiry</button>
+    </div>
+  </div>
+</section>
+
+<section id="designer-team" style="padding: 8rem 3rem; background: #000c1a;">
+    <div class="team-container">
+        <h2 class="team-title">DESIGNER TEAM</h2>
+        
+        <div class="team-grid">
+            <div class="team-member reveal">
+                <div class="member-photo-wrap">
+                    <img src="images/assets/photos/team/kit.png" alt="Keith Clarisse Buenaventura" class="member-photo">
+                </div>
+                <div class="member-details">
+                    <h3>KEITH CLARISSE BUENAVENTURA</h3>
+                    <span class="role">Designer</span>
+                    <a href="tel:+639205874058" class="phone">+639205874058</a>
+                </div>
+            </div>
+
+            <div class="team-member reveal">
+                <div class="member-photo-wrap">
+                    <img src="images/assets/photos/team/meek.png" alt="Robina Meekah G. Carreon" class="member-photo">
+                </div>
+                <div class="member-details">
+                    <h3>ROBINA MEEKAH G. CARREON</h3>
+                    <span class="role">Designer</span>
+                    <a href="tel:+639650551094" class="phone">+639650551094</a>
+                </div>
+            </div>
+
+            <div class="team-member reveal">
+                <div class="member-photo-wrap">
+                    <img src="images/assets/photos/team/cla.png" alt="Clarissa Mae T. Dimpal" class="member-photo">
+                </div>
+                <div class="member-details">
+                    <h3>CLARISSA MAE T. DIMPAL</h3>
+                    <span class="role">Designer</span>
+                    <a href="tel:+639105580082" class="phone">+639105580082</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LOGIN MODAL POP-UP -->
+<div class="modal-overlay" id="login-overlay" onclick="handleLoginOverlayClick(event)">
+  <div class="modal" id="login-modal">
+    <button class="modal-close" onclick="closeLoginModal()">×</button>
+    
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <div class="section-label">Member Portal</div>
+      <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 2rem; margin-bottom: 0.5rem; color: var(--white);">Welcome <em>Back</em></h3>
+      <p style="font-size: 0.8rem; color: rgba(173, 216, 230, 0.6);">It's a pleasure to have you here</p>
+    </div>
+
+   <!-- Added authorizeEntry() to the onsubmit attribute -->
+<form onsubmit="event.preventDefault(); authorizeEntry();" class="auth-form">
+  <div class="form-group">
+    <label>Membership ID / Email</label>
+    <input type="text" placeholder="SBFD-XXXX-XXXX" style="width: 100%;" required>
+  </div>
+  <div class="form-group">
+    <label>Password</label>
+    <input type="password" placeholder="••••••••" style="width: 100%;" required>
+  </div>
+  
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; font-size: 0.7rem;">
+      <label style="display: flex; align-items: center; gap: 0.5rem; color: rgba(173, 216, 230, 0.6); cursor: pointer;">
+          <input type="checkbox" style="width: auto;"> <span>Remember me</span>
+      </label>
+      <a href="#" style="color: var(--gold); text-decoration: none;">Forgot Credentials?</a>
+  </div>
+
+  <!-- Explicitly set type="submit" -->
+  <button type="submit" class="btn-gold" style="width: 100%;">Login</button>
+</form>
+
+    <div class="auth-form-footer">
+        Don't have an account? <a href="javascript:void(0)" onclick="closeLoginModal(); setTimeout(openModal, 300);">Secure Membership</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 <span class="gold-line">Beyond the Shoreline</span> · Subic Bay Floating Business District</p>
+</footer>
+
+
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+
+    <div class="modal-steps" id="modal-steps">
+      <div class="step-dot active" id="sdot-1">
+        <div class="step-dot-circle">1</div>
+        <div class="step-dot-label">Identity</div>
+      </div>
+      <div class="step-dot" id="sdot-2">
+        <div class="step-dot-circle">2</div>
+        <div class="step-dot-label">Payment</div>
+      </div>
+      <div class="step-dot" id="sdot-3">
+        <div class="step-dot-circle">3</div>
+        <div class="step-dot-label">Securing</div>
+      </div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="modal-step-content active" id="step-1">
+      <h3>Identity Verification</h3>
+      <p class="sub">Step 1 of 3 — Secure KYC Protocol</p>
+      <div class="form-row">
+        <div class="form-group"><label>Full Legal Name</label><input type="text" placeholder="As on government ID"/></div>
+        <div class="form-group"><label>Nationality</label><input type="text" placeholder="Filipino"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Membership Tier</label>
+          <select id="modal-tier-select">
+            <option value="Silver">Silver (₱25k–₱35k/yr)</option>
+            <option value="Gold">Gold (₱80k–₱120k/yr)</option>
+            <option value="VIP">VIP (₱250k–₱400k/yr)</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Government ID Type</label>
+          <select><option>Passport</option><option>UMID</option><option>Driver's License</option><option>PhilSys</option></select>
+        </div>
+      </div>
+      <div class="modal-nav">
+        <button class="btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn-gold" onclick="goStep(2)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="modal-step-content" id="step-2">
+      <h3>Encrypted Payment & Authorization</h3>
+      <p class="sub">Step 2 of 3 — AES-256 Secured Transaction</p>
+      <div class="form-group"><label>Card Number</label><input type="text" placeholder="•••• •••• •••• ••••" maxlength="19"/></div>
+      <div class="form-row">
+        <div class="form-group"><label>Expiry</label><input type="text" placeholder="MM / YY"/></div>
+        <div class="form-group"><label>CVV</label><input type="password" placeholder="•••"/></div>
+      </div>
+      <div class="form-group"><label>Cardholder Name</label><input type="text" placeholder="Full name on card"/></div>
+      <div class="form-group"><label>Billing Address</label><input type="text" placeholder="Street, City, Province"/></div>
+      <div style="margin:1rem 0;padding:0.85rem 1rem;background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:2px;">
+        <p style="font-size:0.72rem;color:rgba(173,216,230,0.6);line-height:1.6;">
+          <span style="color:var(--gold);font-weight:600;">🔒 Biometric Authorization Required</span><br>
+          Upon submission, a biometric confirmation request will be sent to your registered mobile device for final authorization.
+        </p>
+      </div>
+      <div class="modal-nav">
+        <button class="btn-outline" onclick="goStep(1)">← Back</button>
+        <button class="btn-gold" onclick="goStep(3)">Authorize Payment →</button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="modal-step-content" id="step-3">
+      <h3>Securing Your Access</h3>
+      <p class="sub">Step 3 of 3 — Please wait…</p>
+      <div class="loading-wrap">
+        <div class="progress-ring">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            <circle class="bg" cx="50" cy="50" r="45"/>
+            <circle class="fg" id="progress-circle" cx="50" cy="50" r="45"/>
+          </svg>
+          <div class="pct" id="pct-text">0%</div>
+        </div>
+        <div class="loading-status" id="loading-status">Initializing secure channel…</div>
+        <div class="pulse-dots">
+          <div class="pulse-dot"></div>
+          <div class="pulse-dot"></div>
+          <div class="pulse-dot"></div>
+        </div>
+        <div id="success-msg" style="display:none;margin-top:2rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">✦</div>
+          <h3 style="font-family:Cormorant Garamond,serif;font-weight:300;font-size:1.5rem;color:var(--gold);margin-bottom:0.5rem;">Access Secured</h3>
+          <p style="font-size:0.8rem;color:rgba(173,216,230,0.65);line-height:1.7;">Your membership has been provisionally secured. A confirmation packet and digital access credentials will be dispatched to your registered email within 24 hours.</p>
+          <button class="btn-gold" style="margin-top:1.5rem" onclick="closeModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  // ─── SCROLL PROGRESS ─────────────────────────────────
+  const scrollBar = document.getElementById('scroll-bar');
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total = document.body.scrollHeight - window.innerHeight;
+    scrollBar.style.width = (scrolled / total * 100) + '%';
+    navbar.classList.toggle('scrolled', scrolled > 60);
+  });
+
+  // ─── PARTICLES ────────────────────────────────────────
+  const particleContainer = document.getElementById('particles');
+  for (let i = 0; i < 28; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 3 + 1;
+    p.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      bottom:${Math.random()*40}%;
+      animation-delay:${Math.random()*8}s;
+      animation-duration:${4 + Math.random()*6}s;
+    `;
+    particleContainer.appendChild(p);
+  }
+
+  // ─── REVEAL ON SCROLL ─────────────────────────────────
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+
+  // ─── MODAL ────────────────────────────────────────────
+  let currentStep = 1;
+  let loadingInterval;
+
+  function openModal(tier) {
+    const overlay = document.getElementById('modal-overlay');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    if (tier) {
+      const sel = document.getElementById('modal-tier-select');
+      if (sel) sel.value = tier;
+    }
+    goStep(1, true);
+  }
+
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+    clearInterval(loadingInterval);
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('modal-overlay')) closeModal();
+  }
+
+  // ─── LOGIN MODAL LOGIC ────────────────────────────────
+  function openLoginModal() {
+    const overlay = document.getElementById('login-overlay');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLoginModal() {
+    const overlay = document.getElementById('login-overlay');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function authorizeEntry() {
+    const statusEl = document.getElementById('loading-status');
+    // Simulate a secure connection before redirecting
+    setTimeout(() => {
+        // In Laravel, you will eventually use: window.location.href = "{{ route('dashboard') }}";
+        window.location.href = "dashboard.html"; 
+    }, 1000);
+  }
+
+  function handleLoginOverlayClick(e) {
+    // Closes the modal if the user clicks the darkened background
+    if (e.target === document.getElementById('login-overlay')) {
+      closeLoginModal();
+    }
+  }
+
+  function goStep(n, silent) {
+    currentStep = n;
+    document.querySelectorAll('.modal-step-content').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-' + n).classList.add('active');
+
+    document.querySelectorAll('.step-dot').forEach((d, i) => {
+      d.classList.remove('active', 'done');
+      if (i + 1 < n) d.classList.add('done');
+      if (i + 1 === n) d.classList.add('active');
+    });
+
+    if (n === 3) startLoading();
+  }
+
+  function startLoading() {
+    clearInterval(loadingInterval);
+    let pct = 0;
+    const circle = document.getElementById('progress-circle');
+    const pctText = document.getElementById('pct-text');
+    const statusEl = document.getElementById('loading-status');
+    const successMsg = document.getElementById('success-msg');
+    const loadingWrap = document.querySelector('.loading-wrap');
+    const circumference = 2 * Math.PI * 45;
+
+    circle.style.strokeDashoffset = circumference;
+    pctText.textContent = '0%';
+    statusEl.style.display = 'block';
+    successMsg.style.display = 'none';
+    document.querySelector('.pulse-dots').style.display = 'flex';
+
+    const statuses = [
+      'Initializing secure channel…',
+      'Verifying corporate credentials…',
+      'Encrypting payment data…',
+      'Biometric authorization pending…',
+      'Registering district access token…',
+      'Finalizing membership record…',
+    ];
+
+    loadingInterval = setInterval(() => {
+      pct = Math.min(pct + Math.random() * 4 + 1, 100);
+      const offset = circumference - (pct / 100) * circumference;
+      circle.style.strokeDashoffset = offset;
+      pctText.textContent = Math.floor(pct) + '%';
+
+      const si = Math.floor((pct / 100) * statuses.length);
+      statusEl.textContent = statuses[Math.min(si, statuses.length - 1)];
+
+      if (pct >= 100) {
+        clearInterval(loadingInterval);
+        setTimeout(() => {
+          statusEl.style.display = 'none';
+          document.querySelector('.pulse-dots').style.display = 'none';
+          successMsg.style.display = 'block';
+        }, 600);
+      }
+    }, 120);
+  }
+
+  // Form input formatting
+  document.addEventListener('input', (e) => {
+    if (e.target.placeholder === '•••• •••• •••• ••••') {
+      let v = e.target.value.replace(/\D/g, '').substring(0, 16);
+      e.target.value = v.replace(/(.{4})/g, '$1 ').trim();
+    }
+    if (e.target.placeholder === 'MM / YY') {
+      let v = e.target.value.replace(/\D/g, '').substring(0, 4);
+      if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2);
+      e.target.value = v;
+    }
+  });
+</script>
+</body>
+</html>
